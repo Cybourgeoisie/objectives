@@ -4,13 +4,13 @@
 	<div class="container-fluid">
 
 		<div class="page-header-hr">
-			<h1>{{objCtrl.objective.name}}</h1>
+			<h1>{{objCtrl.objective.get('name')}}</h1>
 		</div>
 
-		<div ng-show="objCtrl.objective.tasks.length">
+		<div ng-show="objCtrl.objective.hasTasks()">
 			
 			<!-- List all objectives and progress -->
-			<div ng-repeat="task in objCtrl.objective.tasks">
+			<div ng-repeat="task in objCtrl.objective.getTasks()">
 				<div class="row col-wrap panel">
 					<div class="col-sm-2">
 						Incomplete
@@ -39,12 +39,12 @@
 			</div>
 		</div>
 
-		<div ng-hide="objCtrl.objective.tasks.length" class="well well-lg">
+		<div ng-hide="objCtrl.objective.hasTasks()" class="well well-lg">
 
 			<div class="row col-wrap">
 				<div class="col-sm-5 col-sm-offset-2">
 					You don't seem to have any tasks yet!<br /><br />
-					Would you like to take the time to create one?
+					Would you like to take the time to add one?
 				</div>
 
 				<div class="col-sm-2">

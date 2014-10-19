@@ -15,15 +15,19 @@
 				templateUrl: 'view/querent/querent.html',
 				controller: 'QuerentController'
 			})
-			.when('/querent', {
+			.when('/create', {
 				templateUrl: 'view/querent/querent.html',
 				controller: 'QuerentController'
 			})
-			.when('/objectives', {
+			.when('/objective/:objectiveId', {
 				templateUrl: 'view/objective/objective.html',
 				controller: 'ObjectiveController'
 			})
-			.when('/feed', {
+			.when('/my-objectives', {
+				templateUrl: 'view/profile/my-objectives.html',
+				controller: 'ProfileController'
+			})
+			.otherwise({
 				templateUrl: 'view/querent/querent.html',
 				controller: 'QuerentController'
 			});

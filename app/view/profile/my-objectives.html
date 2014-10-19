@@ -1,0 +1,52 @@
+<div ng-controller="ProfileController as profileCtrl">
+	<div class="container-fluid">
+
+		<div class="page-header-hr">
+			<h1>My Objectives</h1>
+		</div>
+
+		<div ng-show="profileCtrl.hasObjectives()">
+			
+			<!-- List all objectives and progress -->
+			<div ng-repeat="objective in profileCtrl.getObjectives()">
+				<div class="row col-wrap panel">
+					<div class="col-sm-2">
+						Incomplete
+					</div>
+
+					<div class="col-sm-7">
+						<strong><a href="#/objective/{{objective.id}}">{{objective.name}}</a></strong>
+					</div>
+
+					<div class="col-sm-3">
+						<div class="progress">
+							<div class="progress-bar" role="progressbar" aria-valuenow="30" 
+								aria-valuemin="0" aria-valuemax="100" style="width: 30%;">
+								30%
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+
+		<div ng-hide="profileCtrl.hasObjectives()" class="well well-lg">
+
+			<div class="row col-wrap">
+				<div class="col-sm-5 col-sm-offset-2">
+					You don't seem to have any objectives yet!<br /><br />
+					Would you like to take the time to create one?
+				</div>
+
+				<div class="col-sm-2">
+					<button ng-click="profileCtrl.createObjective()"
+						type="button" class="btn btn-default btn-md">
+						Create Objective
+					</button>
+				</div>
+			</div>
+
+		</div>
+
+	</div>
+</div>

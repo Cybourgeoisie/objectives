@@ -1,7 +1,11 @@
 (function() {
-	var module = angular.module('querent', []);
+	var module = angular.module('querent', [
+		'objective'
+	]);
 
-	module.controller('QuerentController', function()
+	module.controller('QuerentController', [
+	'$rootScope', '$scope', '$location', 'objectiveService', 
+	function($rootScope, $scope, $location, objectiveService)
 	{
 		var randomPlaceholders = [
 			'learn a new language',
@@ -25,9 +29,11 @@
 		{
 			if (!objective) { return; }
 
-			// to do
+			// Update the objective service
+			var id = objectiveService.create(objective);
+			$location.path('/objective/' + id);
 		}
-	});
+	}]);
 
 	module.directive('querent', function()
 	{
