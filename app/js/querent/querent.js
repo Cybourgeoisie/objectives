@@ -4,8 +4,8 @@
 	]);
 
 	module.controller('QuerentController', [
-	'$rootScope', '$scope', '$location', 'objectiveService', 
-	function($rootScope, $scope, $location, objectiveService)
+	'$rootScope', '$scope', '$location', '$filter', 'objectiveService', 
+	function($rootScope, $scope, $location, $filter, objectiveService)
 	{
 		var randomPlaceholders = [
 			'learn a new language',
@@ -27,10 +27,19 @@
 
 		this.submitObjective = function(objective)
 		{
-			if (!objective) { return; }
+			// Only support strings for now
+			if (objective && typeof objective !== "string")
+			{
+				return;
+			}
+
+			if (!objective)
+			{
+				objective = this.randomPlaceholder;
+			}
 
 			// Update the objective service
-			var id = objectiveService.create(objective);
+			var id = objectiveService.create($filter('capitalize')(objective));
 			$location.path('/objective/' + id);
 		}
 	}]);

@@ -7,9 +7,17 @@
 	 * Objective
 	 **/
 
-	module.controller('ObjectiveController', ['$rootScope', 'objectiveService', function($rootScope, objectiveService)
+	module.controller('ObjectiveController', [
+	'$rootScope', '$routeParams', '$location', 'objectiveService', 
+	function($rootScope, $routeParams, $location, objectiveService)
 	{
-		this.objective = objectiveService;
+		this.objective = objectiveService.load($routeParams.objectiveId);
+
+		if (!this.objective.isset())
+		{
+			// Route back to the querent page
+			$location.path('/querent/');
+		}
 
 		// Open the edit window
 		this.openEditWindow = TaskEditController.prototype.openEditWindow;
@@ -66,6 +74,7 @@
 		function reset()
 		{
 			objective = {
+				'id'    : 0,
 				'name'  : '',
 				'tasks' : []
 			};
@@ -97,6 +106,23 @@
 			}
 		}
 
+		function loadObjective(id)
+		{
+			if (userFactory.hasObjective(id))
+			{
+				objective = userFactory.getObjective(id);
+				return this;
+			}
+
+			objective = null;
+			return this;
+		}
+
+		function isset()
+		{
+			return !!objective;
+		}
+
 		return {
 			'create'   : create,
 			'set'      : set,
@@ -104,7 +130,9 @@
 			'reset'    : reset,
 			'getTasks' : getTasks,
 			'hasTasks' : hasTasks,
-			'addTask'  : addTask
+			'addTask'  : addTask,
+			'load'     : loadObjective,
+			'isset'    : isset
 		};
 	}]);
 
@@ -118,6 +146,12 @@
 
 		this.submitTask = function()
 		{
+			// Make sure we have a task provided
+			if (!this.task || !this.task.name)
+			{
+				return;
+			}
+
 			// Add the task and clear it out
 			objectiveService.addTask(this.task);
 			this.task = {};

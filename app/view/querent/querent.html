@@ -10,7 +10,7 @@
 				<div class="form-group">
 					<label for="query" class="h1 col-sm-4 text-right">I want to</label>
 					<div class="col-sm-8">
-						<input ng-model="querentCtrl.objective" type="text" class="form-control input-lg" id="query" placeholder="{{querentCtrl.randomPlaceholder}}">
+						<input ng-model="querentCtrl.objective" type="text" class="form-control input-lg" id="query" placeholder="{{querentCtrl.randomPlaceholder | capitalize:true}}">
 					</div>
 				</div>
 				<div class="submit">

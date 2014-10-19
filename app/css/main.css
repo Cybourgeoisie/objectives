@@ -27,6 +27,12 @@ body {
 	border-bottom: 1px solid #eee;
 }
 
+.vcenter {
+	display: inline-block;
+	vertical-align: middle;
+	float: none;
+}
+
 #profile-options ul li span.glyphicon.pull-right {
 	margin-top: 2px;
 }

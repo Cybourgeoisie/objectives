@@ -19,18 +19,12 @@
 		function addObjective(obj)
 		{
 			// Create an id
-			var id = getNextId();
+			obj.id = getNextId();
 
-			if (obj instanceof Object)
-			{
-				objectives.push({
-					'name' : obj.name,
-					'id'   : id
-				});
-			}
+			objectives.push(obj);
 
 			// Return the current ID
-			return id;
+			return obj.id;
 		}
 
 		function getObjectives()
@@ -56,11 +50,31 @@
 			return id;
 		}
 
+		function getObjective(id)
+		{
+			for (var i = 0; i < objectives.length; i++)
+			{
+				if (id == objectives[i].id)
+				{
+					return objectives[i];
+				}
+			}
+
+			return null;
+		}
+
+		function hasObjective(id)
+		{
+			return !!getObjective(id);
+		}
+
 		return {
 			'username'      : username,
 			'addObjective'  : addObjective,
 			'getObjectives' : getObjectives,
-			'hasObjectives' : hasObjectives
+			'hasObjectives' : hasObjectives,
+			'getObjective'  : getObjective,
+			'hasObjective'  : hasObjective
 		};
 	});
 
