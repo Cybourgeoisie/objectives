@@ -1,0 +1,23 @@
+<div id="profile-options" class="dropdown">
+	<button data-toggle="dropdown" type="button" class="btn btn-default">
+		{{profileCtrl.userInfo.username}} <span class="glyphicon glyphicon-user"></span>
+	</button>
+	<ul class="dropdown-menu" role="menu" aria-labelledby="dLabel">
+		<li role="presentation">
+			<a role="menuitem" tabindex="-1" href="#objectives">
+				<span class="glyphicon glyphicon-th-list pull-right"></span> My Objectives
+			</a>
+		</li>
+		<li role="presentation">
+			<a role="menuitem" tabindex="-1" href="#querent">
+				<span class="glyphicon glyphicon-cog pull-right"></span> Settings
+			</a>
+		</li>
+		<li role="presentation" class="divider"></li>
+		<li role="presentation">
+			<a role="menuitem" tabindex="-1" ng-click="profileCtrl.logOut()">
+				<span class="glyphicon glyphicon-off pull-right"></span> Log Out
+			</a>
+		</li>
+	</ul>
+</div>
