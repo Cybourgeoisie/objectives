@@ -15,8 +15,7 @@
 
 		if (!this.objective.isset())
 		{
-			// Route back to the querent page
-			$location.path('/querent/');
+			$location.path('/404');
 		}
 
 		// Open the edit window

@@ -13,6 +13,11 @@ body {
 	margin: 0px 80px;
 }
 
+#top-navbar {
+	background-color: #FFF;
+	border-bottom: 1px solid #eee;
+}
+
 .page-header {
 	margin: 30px 0px 10px;
 	color: #333;

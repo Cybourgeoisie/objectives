@@ -1,0 +1,17 @@
+<div ng-controller="ProfileController as profileCtrl">
+	<div class="container-fluid">
+
+		<div class="page-header-hr">
+			<h1>Settings</h1>
+		</div>
+
+		<div ng-show="profileCtrl.isLoggedIn()">
+			You are currently logged in. This is the settings page stub.
+		</div>
+
+		<div ng-hide="profileCtrl.isLoggedIn()" class="well well-lg">
+			You must be logged in to modify your settings.
+		</div>
+
+	</div>
+</div>

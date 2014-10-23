@@ -27,9 +27,18 @@
 				templateUrl: 'view/profile/my-objectives.html',
 				controller: 'ProfileController'
 			})
+			.when('/settings', {
+				templateUrl: 'view/profile/settings.html',
+				controller:  'ProfileController'
+			})
+			.when('/about', {
+				templateUrl: 'view/about/about.html'
+			})
+			.when('/404', {
+				templateUrl: 'view/error/404.html'
+			})
 			.otherwise({
-				templateUrl: 'view/querent/querent.html',
-				controller: 'QuerentController'
+				templateUrl: 'view/error/404.html'
 			});
 
 		// Use HTML5 History API if available
