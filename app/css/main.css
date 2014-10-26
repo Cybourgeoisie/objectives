@@ -38,6 +38,20 @@ body {
 	float: none;
 }
 
+.objective-progress span.progress-text {
+	padding: 0px 2px;
+}
+
+a:link .glyphicon, a:visited .glyphicon {
+	color: black;
+	text-decoration: none;
+}
+
+a:hover .glyphicon {
+	color: #2a6496;
+	text-decoration: none;
+}
+
 #profile-options ul li span.glyphicon.pull-right {
 	margin-top: 2px;
 }

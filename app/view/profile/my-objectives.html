@@ -8,24 +8,43 @@
 		<div ng-show="profileCtrl.hasObjectives()">
 			
 			<!-- List all objectives and progress -->
-			<div ng-repeat="objective in profileCtrl.getObjectives()">
-				<div class="row col-wrap panel">
-					<div class="col-sm-2">
-						Incomplete
-					</div>
+			<div class="row col-wrap panel">
+				<div class="col-sm-6" ng-repeat="objective in profileCtrl.getObjectives()">
 
-					<div class="col-sm-7">
-						<strong><a href="#/objective/{{objective.id}}">{{objective.name}}</a></strong>
-					</div>
+					<div class="row col-wrap">
+						<div class="col-sm-10">
+							<h3>
+								{{objective.get('name')}}
+							</h3>
+						</div>
 
-					<div class="col-sm-3">
-						<div class="progress">
-							<div class="progress-bar" role="progressbar" aria-valuenow="30" 
-								aria-valuemin="0" aria-valuemax="100" style="width: 30%;">
-								30%
-							</div>
+						<div class="col-sm-2">
+							<h3>
+								<small>
+									<a role="menuitem" tabindex="-1" href="#/objective/{{objective.id}}">
+										<span class="glyphicon glyphicon-pencil pull-right"></span>
+									</a>
+								</small>
+							</h3>
 						</div>
 					</div>
+
+					<div class="progress objective-progress">
+						<div class="progress-bar progress-bar-success" role="progressbar" aria-valuenow="{{objective.getProgress()}}" 
+							aria-valuemin="0" aria-valuemax="100" style="width: {{objective.getProgress()}}%;">
+							<span class="progress-text">{{objective.getProgress()}}%</span>
+						</div>
+					</div>
+
+					<div class="text-center">
+						<div ng-show="objective.hasTasks()">
+							<h5>{{objective.countTasks({'complete':true})}} / {{objective.countTasks()}} Tasks Completed</h5>
+						</div>
+						<div ng-hide="objective.hasTasks()">
+							<h5>No Tasks</h5>
+						</div>
+					</div>
+
 				</div>
 			</div>
 		</div>

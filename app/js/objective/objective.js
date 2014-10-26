@@ -11,9 +11,11 @@
 	'$rootScope', '$routeParams', '$location', 'objectiveService', 
 	function($rootScope, $routeParams, $location, objectiveService)
 	{
-		this.objective = objectiveService.load($routeParams.objectiveId);
-
-		if (!this.objective.isset())
+		try
+		{
+			this.objective = objectiveService.load($routeParams.objectiveId);
+		}
+		catch (exception)
 		{
 			$location.path('/404');
 		}
@@ -30,79 +32,177 @@
 		};
 	});
 
-	module.factory('objectiveService', ['userFactory', function(userFactory)
+	var Objective = function()
 	{
-		// Declarations
-		var objective;
-		var tasks;
+		var data = {
+			'id'   : 0,
+			'name' : ''
+		};
 
-		// Setup
-		reset();
+		var tasks = [];
 
-		function create(data)
+		function getProgress()
 		{
-			// Reset the current objective
-			reset();
-
-			// Set the passed data
-			if (typeof data === "string")
+			var numTasks = countTasks();
+			if (numTasks == 0)
 			{
-				set('name', data);
+				return 0;
 			}
 
-			// Add the objective
-			return userFactory.addObjective(objective);
+			var progress = parseInt(countTasks({'complete': true}) / numTasks);
+
+			return progress;
 		}
 
 		function set(key, value)
 		{
-			if (objective.hasOwnProperty(key))
+			if (data.hasOwnProperty(key))
 			{
-				objective[key] = value;
+				data[key] = value;
 			}
 		}
 
 		function get(key)
 		{
-			if (objective.hasOwnProperty(key))
+			if (data.hasOwnProperty(key))
 			{
-				return objective[key];
+				return data[key];
 			}
-		}
-
-		function reset()
-		{
-			objective = {
-				'id'    : 0,
-				'name'  : '',
-				'tasks' : []
-			};
 		}
 
 		function getTasks()
 		{
-			return objective.tasks || [];
+			return tasks || [];
 		}
 
 		function hasTasks()
 		{
-			return (objective.tasks && objective.tasks instanceof Array && objective.tasks.length);
+			return (tasks && tasks instanceof Array && tasks.length);
 		}
 
 		function addTask(task)
 		{
-			if (typeof task === "string")
+			tasks.push(new Task(task));
+		}
+
+		function countTasks(opt)
+		{
+			var bComplete = false;
+			if (opt && opt instanceof Object)
 			{
-				objective.tasks.push({
-					'name' : task
-				});
+				if (opt.hasOwnProperty('complete') && opt.complete)
+				{
+					bComplete = true;
+				}
 			}
-			else if (task instanceof Object)
+
+			// If we have no tasks, return 0
+			if (tasks.length == 0)
 			{
-				objective.tasks.push({
-					'name' : task.name
-				});
+				return 0;
 			}
+
+			var numComplete = 0;
+			if (bComplete)
+			{
+				for (var i = 0; i < tasks.length; i++)
+				{
+					if (tasks[i].hasOwnProperty('complete') && tasks[i].complete)
+					{
+						numComplete++;
+					}
+				}
+
+				return numComplete;
+			}
+
+			// Default case - all tasks
+			return tasks.length;
+		}
+
+		return {
+			'set'         : set,
+			'get'         : get,
+			'getTasks'    : getTasks,
+			'hasTasks'    : hasTasks,
+			'addTask'     : addTask,
+			'countTasks'  : countTasks,
+			'getProgress' : getProgress
+		};
+	};
+
+	var Task = function(obj)
+	{
+		var data = {
+			'name'        : '',
+			'description' : '',
+			'complete'    : false
+		};
+
+		if (obj)
+		{
+			if (typeof obj === "string")
+			{
+				data.name = obj;
+			}
+			else if (obj instanceof Object)
+			{
+				for (var prop in obj)
+				{
+					if (obj.hasOwnProperty(prop) && data.hasOwnProperty(prop))
+					{
+						data[prop] = obj[prop];
+					}
+				}
+			}
+		}
+
+		function set(key, value)
+		{
+			if (data.hasOwnProperty(key))
+			{
+				data[key] = value;
+			}
+		}
+
+		function get(key)
+		{
+			if (data.hasOwnProperty(key))
+			{
+				return data[key];
+			}
+		}
+
+		function isComplete()
+		{
+			return get('complete');
+		}
+
+		return {
+			'get'        : get,
+			'set'        : set,
+			'isComplete' : isComplete
+		};
+	}
+
+	module.factory('objectiveService', ['userFactory', function(userFactory)
+	{
+		// Declarations
+		var objective = new Objective();
+
+		function create(data)
+		{
+			// Reset the current objective
+			objective = new Objective();
+
+			// Set the passed data
+			if (typeof data === "string")
+			{
+				objective.set('name', data);
+			}
+
+			// Add the objective
+			return userFactory.addObjective(objective);
 		}
 
 		function loadObjective(id)
@@ -110,28 +210,21 @@
 			if (userFactory.hasObjective(id))
 			{
 				objective = userFactory.getObjective(id);
-				return this;
+				return objective;
 			}
 
-			objective = null;
-			return this;
+			throw {'error': 'No objective found for ID ' + id};
 		}
 
-		function isset()
+		function addTask(task)
 		{
-			return !!objective;
+			objective.addTask(task);
 		}
 
 		return {
-			'create'   : create,
-			'set'      : set,
-			'get'      : get,
-			'reset'    : reset,
-			'getTasks' : getTasks,
-			'hasTasks' : hasTasks,
-			'addTask'  : addTask,
-			'load'     : loadObjective,
-			'isset'    : isset
+			'create'  : create,
+			'load'    : loadObjective,
+			'addTask' : addTask
 		};
 	}]);
 
@@ -139,7 +232,7 @@
 	 * Tasks
 	 **/
 
-	var TaskEditController = function(objectiveService)
+	var TaskEditController = function($filter, objectiveService)
 	{
 		this.task = {};
 
@@ -149,6 +242,11 @@
 			if (!this.task || !this.task.name)
 			{
 				return;
+			}
+
+			if (this.task.name)
+			{
+				this.task.name = $filter('capitalize')(this.task.name);
 			}
 
 			// Add the task and clear it out
@@ -165,7 +263,7 @@
 		$('#edit-task-modal').modal('show');
 	}
 
-	module.controller('TaskEditController', ['objectiveService', TaskEditController]);
+	module.controller('TaskEditController', ['$filter', 'objectiveService', TaskEditController]);
 
 	module.directive('editTaskModal', function()
 	{

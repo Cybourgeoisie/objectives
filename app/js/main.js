@@ -56,4 +56,21 @@
 				return txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase();}) : '';
 		}
 	});
+
+	// Bootstrap's radio buttons (using button view) does not jive with Angular.js
+	// Source: https://github.com/angular/angular.js/issues/4516
+	app.directive('inputDetectChange', function() {
+		return {
+			replace: false,
+			require: 'ngModel',
+			scope: false,
+			link: function (scope, element, attrs, ngModelCtrl) {
+				element.on('change', function () {
+					scope.$apply(function () {
+						ngModelCtrl.$setViewValue(element[0].type.toLowerCase() == 'radio' ? element[0].value : element[0].checked);
+					});
+				});
+			}
+		};
+	});
 })();

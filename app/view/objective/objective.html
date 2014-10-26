@@ -10,14 +10,26 @@
 		<div ng-show="objCtrl.objective.hasTasks()">
 			
 			<!-- List all objectives and progress -->
-			<div ng-repeat="task in objCtrl.objective.getTasks()">
-				<div class="row col-wrap panel">
+			<div class="panel" ng-repeat="task in objCtrl.objective.getTasks()">
+				<div class="row col-wrap">
+
+					<!-- First Row -->
 					<div class="col-sm-2">
-						Incomplete
+
+						<div ng-show="{{task.isComplete()}}">
+							<span class="glyphicon glyphicon-ok"></span>
+						</div>
+
+						<div ng-hide="{{task.isComplete()}}">
+							<button ng-click="task.set('complete', true)">
+								<span class="glyphicon glyphicon-unchecked"></span>
+							</button>
+						</div>
+
 					</div>
 
 					<div class="col-sm-7">
-						<strong>{{task.name}}</strong>
+						<strong>{{task.get('name')}}</strong>
 					</div>
 
 					<div class="col-sm-3">
@@ -27,6 +39,11 @@
 								60%
 							</div>
 						</div>
+					</div>
+
+					<!-- Second Row -->
+					<div class="col-sm-7 col-md-offset-2" ng-show="task.get('description')">
+						{{task.get('description')}}
 					</div>
 				</div>
 			</div>
