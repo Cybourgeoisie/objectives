@@ -69,6 +69,18 @@ abstract class GeppettoFoundation
 	 Get Table Information
 	 *********************/
 
+	protected function _getCleanTableName($table_name)
+	{
+		// Escape the table if it's a reserved name
+		$reserved_table_names = array('user');
+		if (in_array($table_name, $reserved_table_names))
+		{
+			$table_name = '"' . $table_name . '"';
+		}
+
+		return $table_name;
+	}
+
 	protected function _getTableSchema($table_name)
 	{
 		// Look for an existing schema
@@ -306,6 +318,9 @@ abstract class GeppettoFoundation
 		// Construct the primary key requirement
 		$primary_key_value = intval($primary_key_value);
 
+		// Clean the table name
+		$table_name = self::_getCleanTableName($table_name);
+
 		// Construct the SELECT sql
 		$sql = '
 			SELECT ' . implode(', ', $parameter_columns) . '
@@ -343,6 +358,9 @@ abstract class GeppettoFoundation
 
 		// List the number of parameters - Function creates an array of range 1..n and prepends '$' to each number
 		$parameter_placeholders = self::_calculateInputPlaceholders($parameter_columns);
+
+		// Clean the table name
+		$table_name = self::_getCleanTableName($table_name);
 
 		// Construct the INSERT statement
 		$sql = '
@@ -393,6 +411,9 @@ abstract class GeppettoFoundation
 		// Construct the primary key requirement
 		$primary_key_placeholder = '$' . (count($parameter_placeholders) + 1);
 		$primary_key_value       = self::_getPrimaryKeyFromInput($table_name, $keyed_array);
+
+		// Clean the table name
+		$table_name = self::_getCleanTableName($table_name);
 
 		// Construct the UPDATE statement
 		$sql = '

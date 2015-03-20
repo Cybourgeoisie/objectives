@@ -6,8 +6,12 @@ class PostgreSqlHandler
 
 	public function __construct()
 	{
-		$conn_string = 'host=' . DB_HOST . ' port=' . DB_PORT . ' dbname=' . DB_NAME 
-			. ' user=' . DB_USER . ' password=' . DB_PASS;
+		$conn_string = 'host=' . DB_HOST . 
+			' port=' . DB_PORT . 
+			' dbname=' . DB_NAME . 
+			' user=' . DB_USER . 
+			' password=' . DB_PASS;
+
 		$this->conn = pg_connect($conn_string);
 	}
 
