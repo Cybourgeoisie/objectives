@@ -12,7 +12,7 @@ if (!array_key_exists('HTTP_ORIGIN', $_SERVER))
 try
 {
 	$api = new RestApi($_REQUEST['request'], $_SERVER['HTTP_ORIGIN']);
-	echo $api->processRequest();
+	echo json_encode($api->processRequest());
 }
 catch (Exception $e)
 {

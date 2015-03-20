@@ -1,7 +1,6 @@
 <?php
 
 namespace Geppetto;
-use \Utility;
 
 /**
  * GeppettoObject
@@ -63,7 +62,7 @@ abstract class GeppettoObject extends GeppettoObjectFoundation
 		// Ensure we have data
 		if (empty($record) || !array_key_exists($this->primary_key, $record))
 		{
-			Utility::throwException('Could not find the requested record.');
+			\Utility::throwException('Could not find the requested record.');
 		}
 
 		// Fill in the data
@@ -117,7 +116,7 @@ abstract class GeppettoObject extends GeppettoObjectFoundation
 			return $this->getTableReferenceObject($column);
 		}*/
 
-		Utility::throwException('No column named: ' . $column);
+		\Utility::throwException('No column named: ' . $column);
 	}
 
 	public function __set($column, $value)
@@ -125,13 +124,13 @@ abstract class GeppettoObject extends GeppettoObjectFoundation
 		// Check that this column is either a column in the schema, or is an object referred to by this table
 		if (!isset($this->schema[$column]))
 		{
-			Utility::throwException('No column named: ' . $column);
+			\Utility::throwException('No column named: ' . $column);
 		}
 
 		// Don't allow editing the primary key
 		if ($column == $this->primary_key)
 		{
-			Utility::throwException('Cannot edit primary key column.');
+			\Utility::throwException('Cannot edit primary key column.');
 		}
 
 		if (isset($this->record[$column]) && $this->record[$column] === $value)
@@ -150,17 +149,17 @@ abstract class GeppettoObject extends GeppettoObjectFoundation
 		// Check that this column is either a column in the schema, or is an object referred to by this table
 		if (!isset($this->schema[$column]) && !is_object($value) && !is_subclass_of($value, '\Geppetto\GeppettoObject'))
 		{
-			Utility::throwException('No column named: ' . $column);
+			\Utility::throwException('No column named: ' . $column);
 		}
 		else if (is_object($value) && is_subclass_of($value, '\Geppetto\GeppettoObject') && !$this->isTableReference($column))
 		{
-			Utility::throwException('No reference to parameter named: ' . $column);
+			\Utility::throwException('No reference to parameter named: ' . $column);
 		}
 
 		// Don't allow editing the primary key
 		if ($column == $this->primary_key)
 		{
-			Utility::throwException('Cannot edit primary key column.');
+			\Utility::throwException('Cannot edit primary key column.');
 		}
 
 		// If this is a reference to another object, set the correct value
@@ -176,7 +175,7 @@ abstract class GeppettoObject extends GeppettoObjectFoundation
 		// If this wasn't saved, warn the user
 		else if ($this->isTableReference($column) && !$value->saved())
 		{
-			Utility::throwException('Cannot set nonexistent DAO record.');
+			\Utility::throwException('Cannot set nonexistent DAO record.');
 		}
 
 		if (isset($this->record[$column]) && $this->record[$column] === $value)

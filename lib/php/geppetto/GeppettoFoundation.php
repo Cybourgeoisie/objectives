@@ -1,7 +1,6 @@
 <?php
 
 namespace Geppetto;
-use \Utility;
 
 /**
  * Class: GeppettoFoundation
@@ -82,12 +81,12 @@ abstract class GeppettoFoundation
 		$sql = GeppettoQueryRepository::getSql('schema');
 
 		// Get all rows
-		$rows = Utility::pgQueryParams($sql, array($table_name));
+		$rows = \Utility::pgQueryParams($sql, array($table_name));
 
 		// Validate result
 		if (empty($rows))
 		{
-			Utility::throwException('Columns for table (' . $table_name . ') could not be found.');
+			\Utility::throwException('Columns for table (' . $table_name . ') could not be found.');
 		}
 
 		// Construct an array of column => schema information
@@ -112,12 +111,12 @@ abstract class GeppettoFoundation
 		$sql = GeppettoQueryRepository::getSql('primary_key');
 
 		// Get all rows
-		$rows = Utility::pgQueryParams($sql, array($table_name));
+		$rows = \Utility::pgQueryParams($sql, array($table_name));
 
 		// Validate result
 		if (empty($rows) || !array_key_exists('0', $rows) || !array_key_exists('primary_key', $rows[0]))
 		{
-			Utility::throwException('Primary key column for table (' . $table_name . ') could not be found.');
+			\Utility::throwException('Primary key column for table (' . $table_name . ') could not be found.');
 		}
 
 		// Cache the primary key for later retrieval
@@ -139,7 +138,7 @@ abstract class GeppettoFoundation
 		$sql = GeppettoQueryRepository::getSql('references');
 
 		// Get all rows
-		$rows = Utility::pgQueryParams($sql, array($table_name));
+		$rows = \Utility::pgQueryParams($sql, array($table_name));
 
 		// Validate result
 		if (empty($rows))
@@ -227,7 +226,7 @@ abstract class GeppettoFoundation
 		// Make sure that we have at least one element
 		if (!is_array($columns) || empty($columns) || count($columns) < 1)
 		{
-			Utility::throwException('Columns provided to calculate input placeholders are invalid.');
+			\Utility::throwException('Columns provided to calculate input placeholders are invalid.');
 		}
 
 		// Given the input array, just create an array that ranges from 1 to the number of items
@@ -251,7 +250,7 @@ abstract class GeppettoFoundation
 		// Make sure that we have at least one element
 		if (!is_array($columns) || empty($columns) || count($columns) < 1)
 		{
-			Utility::throwException('Columns provided are invalid.');
+			\Utility::throwException('Columns provided are invalid.');
 		}
 
 		// For each value, wrap in double quotes
@@ -278,7 +277,7 @@ abstract class GeppettoFoundation
 		// Find the primary key
 		if (empty($keyed_array) || !array_key_exists($table_primary_key, $keyed_array))
 		{
-			Utility::throwException('Primary key value not found in input.');
+			\Utility::throwException('Primary key value not found in input.');
 		}
 
 		return $keyed_array[$table_primary_key];
@@ -315,12 +314,12 @@ abstract class GeppettoFoundation
 		';
 
 		// Sanitize and run the query
-		$rows = Utility::pgQueryParams($sql, array($primary_key_value));
+		$rows = \Utility::pgQueryParams($sql, array($primary_key_value));
 
 		// Validate result, check that primary key is set
 		if (empty($rows) || !array_key_exists('0', $rows) || !array_key_exists($table_primary_key, $rows[0]))
 		{
-			Utility::throwException('Record not found for ' . $table_name . ' with a primary key value of ' . $primary_key_value);
+			\Utility::throwException('Record not found for ' . $table_name . ' with a primary key value of ' . $primary_key_value);
 		}
 
 		// Return the only record
@@ -353,12 +352,12 @@ abstract class GeppettoFoundation
 		';
 
 		// Sanitize and run the query
-		$rows = Utility::pgQueryParams($sql, $parameter_values);
+		$rows = \Utility::pgQueryParams($sql, $parameter_values);
 
 		// Validate result, check that primary key is set
 		if (empty($rows) || !array_key_exists('0', $rows) || !array_key_exists($table_primary_key, $rows[0]))
 		{
-			Utility::throwException('Record not found for ' . $table_name . ' with a primary key value of ' . $primary_key_value);
+			\Utility::throwException('Record not found for ' . $table_name . ' with a primary key value of ' . $primary_key_value);
 		}
 
 		// Return the only record
@@ -407,12 +406,12 @@ abstract class GeppettoFoundation
 		$parameter_values[] = $primary_key_value;
 
 		// Sanitize and run the query
-		$rows = Utility::pgQueryParams($sql, $parameter_values);
+		$rows = \Utility::pgQueryParams($sql, $parameter_values);
 
 		// Validate result, check that primary key is set
 		if (empty($rows) || !array_key_exists('0', $rows) || !array_key_exists($table_primary_key, $rows[0]))
 		{
-			Utility::throwException('Record not found for ' . $table_name . ' with a primary key value of ' . $primary_key_value);
+			\Utility::throwException('Record not found for ' . $table_name . ' with a primary key value of ' . $primary_key_value);
 		}
 
 		// Return the only record

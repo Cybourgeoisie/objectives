@@ -1,7 +1,6 @@
 <?php
 
 namespace Geppetto;
-use \Utility;
 
 /**
  * Class: GeppettoQueryRepository
@@ -33,7 +32,7 @@ abstract class GeppettoQueryRepository
 			return self::$sql['all'][$command];
 		}
 
-		Utility::throwException('Requested SQL command not found');
+		\Utility::throwException('Requested SQL command not found');
 	}
 
 	private static $sql = array(

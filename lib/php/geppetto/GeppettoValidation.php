@@ -1,7 +1,6 @@
 <?php
 
 namespace Geppetto;
-use \Utility;
 
 /**
  * Class: GeppettoValidation
@@ -15,7 +14,7 @@ abstract class GeppettoValidation
 		$sql = GeppettoQueryRepository::getSql('table_exists');
 
 		// Get all rows
-		$rows = Utility::pgQueryParams($sql, array($table_name));
+		$rows = \Utility::pgQueryParams($sql, array($table_name));
 
 		// Return result
 		return !empty($rows)                         &&
@@ -42,7 +41,7 @@ abstract class GeppettoValidation
 			}
 
 			// If we get here, the table column does not exist
-			Utility::throwException('Column (' . $key . ') for table (' . $table_name . ') does not exist.');
+			\Utility::throwException('Column (' . $key . ') for table (' . $table_name . ') does not exist.');
 		}
 
 		return $parameter_columns;
@@ -74,7 +73,7 @@ abstract class GeppettoValidation
 			}
 
 			// If we get here, the table column does not exist
-			Utility::throwException('Column (' . $key . ') for table (' . $table_name . ') does not exist.');
+			\Utility::throwException('Column (' . $key . ') for table (' . $table_name . ') does not exist.');
 		}
 
 		return array($parameter_columns, $parameter_values);

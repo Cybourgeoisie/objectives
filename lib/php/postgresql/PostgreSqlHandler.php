@@ -48,7 +48,7 @@ class PostgreSqlHandler
 		$params = $new_params;
 
 		// Execute query
-		$sqh  = pg_query_params($this->conn, $sql, $params);
+		$sqh = pg_query_params($this->conn, $sql, $params);
 
 		if ($sqh)
 		{

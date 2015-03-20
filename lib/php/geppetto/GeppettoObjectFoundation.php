@@ -1,7 +1,6 @@
 <?php
 
 namespace Geppetto;
-use \Utility;
 
 /**
  * GeppettoObjectFoundation
@@ -60,7 +59,7 @@ abstract class GeppettoObjectFoundation extends GeppettoFoundation
 			return $this->_table_references[$parsed_table_name];
 		}
 
-		Utility::throwException('Parameter (' . $name . ') is not a valid reference for table (' . $this->_table_name . ')');
+		\Utility::throwException('Parameter (' . $name . ') is not a valid reference for table (' . $this->_table_name . ')');
 	}
 
 	private function _getClassNameFromReference($name)
@@ -79,7 +78,7 @@ abstract class GeppettoObjectFoundation extends GeppettoFoundation
 		}
 		else
 		{
-			Utility::throwException('Could not find the corresponding class for name (' . $name . ') or parsed name (' . $parsed_table_name . ')');
+			\Utility::throwException('Could not find the corresponding class for name (' . $name . ') or parsed name (' . $parsed_table_name . ')');
 		}
 
 		return $class_name;
@@ -132,7 +131,7 @@ abstract class GeppettoObjectFoundation extends GeppettoFoundation
 			if (!$class_id) return null;
 
 			// Get all rows
-			$rows = Utility::pgQueryParams($sql, array($class_id));
+			$rows = \Utility::pgQueryParams($sql, array($class_id));
 			if (!$rows) return null;
 
 			// For each ID, return the instance
@@ -146,7 +145,7 @@ abstract class GeppettoObjectFoundation extends GeppettoFoundation
 			return $one_or_many == 'one' ? $objects[0] : $objects;
 		}
 
-		Utility::throwException('Parameter (' . $name . ') is not a valid reference for table (' . $this->_table_name . ')');
+		\Utility::throwException('Parameter (' . $name . ') is not a valid reference for table (' . $this->_table_name . ')');
 	}
 
 /***************
@@ -172,7 +171,7 @@ abstract class GeppettoObjectFoundation extends GeppettoFoundation
 		// Validate that the table exists
 		if (!GeppettoValidation::validateTableName($table_name))
 		{
-			Utility::throwException('Table (' . $table_name . ') could not be found.');
+			\Utility::throwException('Table (' . $table_name . ') could not be found.');
 		}
 
 		return $table_name;
@@ -180,11 +179,8 @@ abstract class GeppettoObjectFoundation extends GeppettoFoundation
 
 	private function _deriveTableName($name)
 	{
-		// Parse the name - Remove "Dao" from the end (IAS-specific)
-		$parsed_name = preg_replace('/Dao$/', '', $name);
-
 		// Precede each capital letter with an underscore
-		$parsed_name = preg_replace('/([A-Z])/', '_${1}', $parsed_name);
+		$parsed_name = preg_replace('/([A-Z])/', '_${1}', $name);
 
 		// Remove the initial underscore if one exists
 		$parsed_name = preg_replace('/^_/', '', $parsed_name);

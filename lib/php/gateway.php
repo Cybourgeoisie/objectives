@@ -17,7 +17,10 @@ require_once(PHP_PATH . 'postgresql/PostgreSqlHandler.php');
 // Geppetto
 require_once(PHP_PATH . 'geppetto/Geppetto.php');
 
+// User
+require_once(PHP_PATH . 'user/User.php');
 
 // Services
 require_once(PHP_PATH . 'service/Service.interface.php');
-require_once(PHP_PATH . 'service/user/UserService.php');
+require_once(PHP_PATH . 'service/ServiceClass.php');
+require_once(PHP_PATH . 'service/user/User.service.php');

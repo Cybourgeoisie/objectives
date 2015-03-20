@@ -11,6 +11,9 @@ define('DB_NAME', 'objectives');
 define('DB_USER', 'objectives_user');
 define('DB_PASS', 'objpass');
 
+// Deployment Password Salt
+define('PASSWORD_SALT', 'development-objectives-salt');
+
 // Paths
 define('ROOT_PATH', dirname(realpath(__FILE__)) . '/../');
 define('PHP_PATH', ROOT_PATH . 'lib/php/');

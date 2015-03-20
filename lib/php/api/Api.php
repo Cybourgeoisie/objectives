@@ -7,14 +7,15 @@
 
 abstract class Api
 {
-	protected $method = '';
 	protected $endpoint_class = '';
 	protected $endpoint_method = '';
+	protected $method = '';
 	protected $args = array();
 	protected $file = null;
 
 	public function __construct($request)
 	{
+		// TODO: we'll want to lock this down to only accept requests from the site
 		header("Access-Control-Allow-Orgin: *");
 		header("Access-Control-Allow-Methods: *");
 		header("Content-Type: application/json");
@@ -65,26 +66,24 @@ abstract class Api
 
 	public function processRequest()
 	{
-		// Call another class
-		if ($this->endpoint_class && $this->endpoint_method && class_exists($this->endpoint_class))
+		// Require that the class belongs to the Service namespace
+		$service_class = 'Service\\' . $this->endpoint_class;
+
+		// Call the service class
+		if ($this->endpoint_class && $this->endpoint_method && class_exists($service_class))
 		{
-			$class = new ReflectionClass($this->endpoint_class);
+			$class = new ReflectionClass($service_class);
 
 			// Require that this method is a Service
-			if ($class->implementsInterface('Service'))
+			if ($class->implementsInterface('Service\Service'))
 			{
 				$method = $class->getMethod('call');
-				return $method->invokeArgs(new $this->endpoint_class(), array($this->endpoint_method, $this->args));
+				return $method->invokeArgs(new $service_class(), array($this->endpoint_method, $this->args));
 			}
 			else
 			{
 				throw new Exception('Illegal Service Call');
 			}
-		}
-		// Call this class
-		else if (!$this->endpoint_method && method_exists($this, $this->endpoint_method))
-		{
-			return $this->_response($this->{$this->endpoint}($this->args));
 		}
 
 		return $this->_response("No Endpoint - " . $this->endpoint_class . '::' . $this->endpoint_method, 404);
@@ -98,7 +97,7 @@ abstract class Api
 
 	private function _cleanInputs($data)
 	{
-		$clean_input = Array();
+		$clean_input = array();
 		if (is_array($data))
 		{
 			foreach ($data as $k => $v)
@@ -108,6 +107,7 @@ abstract class Api
 		}
 		else
 		{
+			// Not a big fan of this method, but I'll leave it for now
 			$clean_input = trim(strip_tags($data));
 		}
 
