@@ -66,15 +66,20 @@ abstract class Api
 	public function processRequest()
 	{
 		// Call another class
-		if ($this->endpoint_class && $this->endpoint_method 
-			&& method_exists($this->endpoint_class, $this->endpoint_method))
+		if ($this->endpoint_class && $this->endpoint_method && class_exists($this->endpoint_class))
 		{
-			$class  = new $this->endpoint_class();
-			$method = $this->endpoint_method;
+			$class = new ReflectionClass($this->endpoint_class);
 
-			// Need to use reflection & only permit certain classes / methods to be visible
-
-			return $this->_response($class->$method($this->args[0]));
+			// Require that this method is a Service
+			if ($class->implementsInterface('Service'))
+			{
+				$method = $class->getMethod('call');
+				return $method->invokeArgs(new $this->endpoint_class(), array($this->endpoint_method, $this->args));
+			}
+			else
+			{
+				throw new Exception('Illegal Service Call');
+			}
 		}
 		// Call this class
 		else if (!$this->endpoint_method && method_exists($this, $this->endpoint_method))
