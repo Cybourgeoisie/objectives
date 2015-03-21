@@ -4,10 +4,11 @@
 		'navigation',
 		'querent',
 		'objective',
-		'footer'
+		'footer',
+		'angular-extended-notifications'
 	]);
 
-	app.config(function($routeProvider, $locationProvider)
+	app.config(function($routeProvider, $locationProvider, $httpProvider, notificationsProvider)
 	{
 		// Route URLs
 		$routeProvider
@@ -43,6 +44,27 @@
 
 		// Use HTML5 History API if available
 		//$locationProvider.html5Mode(true);
+
+		// Serialize all of the request data
+		$httpProvider.defaults.transformRequest = function(data)
+		{
+			if (data === undefined)
+			{
+				return data;
+			}
+
+			return $.param(data);
+		};
+
+		// Default the content type to work for backwards-compatibility
+		$httpProvider.defaults.headers.post['Content-Type'] = 'application/x-www-form-urlencoded; charset=UTF-8';
+
+		// change default options (that can be overridden in a specific call later if necessary) 
+		notificationsProvider.setDefaults({
+			templatesDir: 'js/vendor/angular-extended-notifications-templates/',
+			faIcons: true,
+			closeOnRouteChange: 'route'
+		});
 	});
 
 	app.controller('MainController', function()

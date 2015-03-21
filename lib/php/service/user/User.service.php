@@ -4,44 +4,21 @@ namespace Service;
 
 class User extends ServiceClass
 {
-	public function funky($args)
-	{
-		print "User called funky method with args " . json_encode($args) . "\r\n\r\n";
-
-		return array('psych!');
-	}
-
-	public function create($args)
-	{
-		// Validate the input
-		if (count($args) != 2)
-		{
-			throw new Exception('Invalid parameters');
-		}
-
-		return $this->createUser($args[0], $args[1]);
-	}
-
-	public function login($args)
-	{
-		// Validate the input
-		if (count($args) != 2)
-		{
-			throw new Exception('Invalid parameters');
-		}
-
-		return $this->loginUser($args[0], $args[1]);
-	}
-
 	/** 
 	 * Create a new user
 	 */
-	protected function createUser($username, $password)
+	public function create($username, $password)
 	{
 		// Validate that the username doesn't already exist
 		if ($this->checkUsernameExists($username))
 		{
 			throw new \Exception('Username already exists');
+		}
+
+		// Require that the password is at least 6 characters long
+		if (strlen($password) < 6)
+		{
+			throw new \Exception('Password is too short - minimum 6 characters');
 		}
 
 		// Create the new user
@@ -50,9 +27,11 @@ class User extends ServiceClass
 		$user_obj->original_name = $username;
 		$user_obj->password      = $user_obj->generatePassword($username, $password);
 		$user_obj->save();
+
+		return true;
 	}
 
-	protected function loginUser($username, $password)
+	public function login($username, $password)
 	{
 		// Validate that the username doesn't already exist
 		if (!$this->checkUsernameExists($username))

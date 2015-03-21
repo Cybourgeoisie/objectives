@@ -9,8 +9,11 @@ abstract class Api
 {
 	protected $endpoint_class = '';
 	protected $endpoint_method = '';
-	protected $method = '';
+	protected $http_method = '';
+
+	protected $request = array();
 	protected $args = array();
+
 	protected $file = null;
 
 	public function __construct($request)
@@ -21,23 +24,23 @@ abstract class Api
 		header("Content-Type: application/json");
 
 		// Get the arguments, class and method
-		$this->args = explode('/', rtrim($request, '/'));
-		$this->endpoint_class  = $this->args[0] ? array_shift($this->args) : null;
-		$this->endpoint_method = $this->args[0] ? array_shift($this->args) : null;
+		$this->request = explode('/', rtrim($request, '/'));
+		$this->endpoint_class  = $this->request[0] ? array_shift($this->request) : null;
+		$this->endpoint_method = $this->request[0] ? array_shift($this->request) : null;
 
 		// Get the request method
-		$this->method = $_SERVER['REQUEST_METHOD'];
+		$this->http_method = $_SERVER['REQUEST_METHOD'];
 
 		// Extend POST to be more specific
-		if ($this->method == 'POST' && array_key_exists('HTTP_X_HTTP_METHOD', $_SERVER))
+		if ($this->http_method == 'POST' && array_key_exists('HTTP_X_HTTP_METHOD', $_SERVER))
 		{
 			if ($_SERVER['HTTP_X_HTTP_METHOD'] == 'DELETE')
 			{
-				$this->method = 'DELETE';
+				$this->http_method = 'DELETE';
 			}
 			else if ($_SERVER['HTTP_X_HTTP_METHOD'] == 'PUT')
 			{
-				$this->method = 'PUT';
+				$this->http_method = 'PUT';
 			}
 			else
 			{
@@ -45,17 +48,17 @@ abstract class Api
 			}
 		}
 
-		switch($this->method)
+		switch($this->http_method)
 		{
 			case 'DELETE':
 			case 'POST':
-				$this->request = $this->_cleanInputs($_POST);
+				$this->args = $this->_cleanInputs($_POST);
 			break;
 			case 'GET':
-				$this->request = $this->_cleanInputs($_GET);
+				$this->args = $this->_cleanInputs($_GET);
 			  break;
 			case 'PUT':
-				$this->request = $this->_cleanInputs($_GET);
+				$this->args = $this->_cleanInputs($_GET);
 				$this->file = file_get_contents("php://input");
 				break;
 			default:
@@ -77,8 +80,11 @@ abstract class Api
 			// Require that this method is a Service
 			if ($class->implementsInterface('Service\Service'))
 			{
+				// Get the method and prepare parameters
 				$method = $class->getMethod('call');
-				return $method->invokeArgs(new $service_class(), array($this->endpoint_method, $this->args));
+				$params = array($this->endpoint_method, $this->request, $this->args);
+
+				return $this->_response($method->invokeArgs(new $service_class(), $params));
 			}
 			else
 			{
@@ -92,7 +98,37 @@ abstract class Api
 	private function _response($data, $status = 200)
 	{
 		header("HTTP/1.1 " . $status . " " . $this->_requestStatus($status));
-		return json_encode($data);
+
+		// Format the response to a standard - include success and all data
+		if (is_array($data))
+		{
+			if (array_key_exists('success', $data))
+			{
+				$response = $data;
+			}
+			else
+			{
+				$response = array_merge(array('success' => true), $data);
+			}
+		}
+		else
+		{
+			if (is_bool($data))
+			{
+				$response = array('success' => $data);
+			}
+			// Require that all responses have some kind of data coming back
+			else if (empty($data))
+			{
+				throw new Exception('No response from method call');
+			}
+			else
+			{
+				$response = array('success' => true, 'data' => $data);
+			}
+		}
+
+		return $response;
 	}
 
 	private function _cleanInputs($data)

@@ -39,8 +39,7 @@
 			}
 
 			// Update the objective service
-			var id = objectiveService.create($filter('capitalize')(objective));
-			$location.path('/objective/' + id);
+			objectiveService.create($filter('capitalize')(objective));
 		}
 	}]);
 

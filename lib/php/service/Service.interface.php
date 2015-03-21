@@ -4,5 +4,5 @@ namespace Service;
 
 interface Service
 {
-	public function call($method, $args);
+	public function call($method, $request, $args);
 }

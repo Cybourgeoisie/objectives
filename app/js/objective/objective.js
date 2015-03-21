@@ -39,6 +39,7 @@
 			'name' : ''
 		};
 
+		var id;
 		var tasks = [];
 
 		function getProgress()
@@ -58,6 +59,12 @@
 		{
 			if (data.hasOwnProperty(key))
 			{
+				// Save the ID to this object as well
+				if (key == 'id')
+				{
+					this.id = value;
+				}
+
 				data[key] = value;
 			}
 		}
@@ -185,24 +192,64 @@
 		};
 	}
 
-	module.factory('objectiveService', ['userFactory', function(userFactory)
+	module.factory('objectiveService', [
+	'userFactory', '$http', 'notifications', '$location',
+	function(userFactory, $http, notifications, $location)
 	{
 		// Declarations
 		var objective = new Objective();
 
-		function create(data)
+		function create(inputData)
 		{
-			// Reset the current objective
-			objective = new Objective();
-
-			// Set the passed data
-			if (typeof data === "string")
+			// Format the input
+			if (typeof inputData === "string")
 			{
-				objective.set('name', data);
+				inputData = {
+					'name' : inputData
+				};
 			}
 
-			// Add the objective
-			return userFactory.addObjective(objective);
+			// Submit the creation request
+			$http.post('./api/objective/create', inputData).
+				success(function(data, status, headers, config)
+				{
+					// Validate outcome
+					if (data.success && data.objective)
+					{
+						notifications.success(
+							'Objective Created!', 
+							'Your objective has been created!',
+							{ duration: 4000 }
+						);
+
+						// Reset the current objective
+						objective = new Objective();
+						objective.set('id',   data.objective.objective_id);
+						objective.set('name', data.objective.name);
+
+						// Add the objective to the UI
+						userFactory.addObjective(objective);
+
+						// Redirect the user to the page
+						$location.path('/objective/' + parseInt(data.objective.objective_id));
+					}
+					else
+					{
+						notifications.error(
+							'Failed to Create Objective', 
+							'Your objective could not be created.',
+							{ duration: -1 }
+						);
+					}
+				}).
+				error(function(data, status, headers, config)
+				{
+					notifications.error(
+						'Failed to Create Objective', 
+						'Your objective could not be created.',
+						{ duration: -1 }
+					);
+				});
 		}
 
 		function loadObjective(id)

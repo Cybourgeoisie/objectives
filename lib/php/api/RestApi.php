@@ -6,6 +6,12 @@ class RestApi extends Api
 
 	public function __construct($request, $origin)
 	{
+		// Only allow requests from this server
+		if ($_SERVER['SERVER_ADDR'] != $_SERVER['REMOTE_ADDR'])
+		{
+			throw new Exception('External requests not supported');
+		}
+
 		parent::__construct($request);
 
 		/*
@@ -30,36 +36,5 @@ class RestApi extends Api
 
 		$this->User = $User;
 		*/
-
-		/*
-		if (!array_key_exists('apiKey', $this->request))
-		{
-			throw new Exception('No API Key provided');
-		}
-		else if (!array_key_exists('token', $this->request))
-		{
-			throw new Exception('Invalid User Token');
-		}
-		*/
-	}
-
-	/**
-	 * Example of an Endpoint
-	 */
-	protected function example()
-	{
-		if ($this->method == 'GET')
-		{
-			return "You've made a GET request";
-		}
-		else
-		{
-			return "Only accepts GET requests";
-		}
-	}
-
-	protected function dbexample()
-	{
-		return Utility::pgQueryParams('SELECT * FROM user;', array());
 	}
 }

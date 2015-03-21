@@ -1,7 +1,7 @@
 <?php
 
 // Dev only - print all errors
-error_reporting(E_ALL);
+error_reporting(E_ERROR);
 ini_set('display_errors', '1');
 
 // Database Connection

@@ -18,8 +18,11 @@
 
 		function addObjective(obj)
 		{
-			// Create an id
-			obj.id = getNextId();
+			// Create an id if none is provided
+			if (!obj.id)
+			{
+				obj.id = getNextId();
+			}
 
 			objectives.push(obj);
 
