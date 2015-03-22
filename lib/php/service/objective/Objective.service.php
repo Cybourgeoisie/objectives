@@ -9,21 +9,13 @@ class Objective extends ServiceClass
 	 */
 	public function create($name, $description = '')
 	{
-		// Get the user
-		//$user_obj = \User::getLoggedIn();
+		$objective_obj = new \Objective();
+		$result = $objective_obj->create($name, $description);
 
-		// Validate that the username doesn't already exist
-		//if ($this->checkObjectiveExists($name, $user_obj->user_id))
-		//{
-		//	throw new \Exception('Objective already exists');
-		//}
-
-		// Create the new objective
-		$objective_obj                    = new \Objective();
-		$objective_obj->objective_type_id = \ObjectiveType::getIdByName('objective');
-		//$objective_obj->user_id           = $user_obj->user_id;
-		$objective_obj->name              = $name;
-		$objective_obj->save();
+		if (!$result)
+		{
+			throw new Exception('Could not create objective');
+		}
 
 		return array('objective' => $objective_obj->toArray());
 	}
@@ -39,12 +31,5 @@ class Objective extends ServiceClass
 		}
 
 		return $objective->toArray();
-	}
-
-	private function checkObjectiveExists($name, $user_id)
-	{
-		$sql = 'SELECT objective_id FROM objective WHERE name = $1 AND status;';
-		$res = \Utility::pgQueryParams($sql, array($name));
-		return !!($res && $res[0] && $res[0]['objective_id']);
 	}
 }

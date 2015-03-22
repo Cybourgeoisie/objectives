@@ -3,6 +3,7 @@ CREATE TABLE "user" (
 	"name" VARCHAR(128) NOT NULL,
 	"original_name" VARCHAR(128) NOT NULL,
 	"password" VARCHAR(128) NOT NULL,
+	"session" VARCHAR(128),
 	"email" VARCHAR(256) UNIQUE,
 	"created" TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT NOW(),
 	"status" BOOLEAN NOT NULL DEFAULT true,

@@ -5,6 +5,7 @@
 		'querent',
 		'objective',
 		'footer',
+		'services',
 		'angular-extended-notifications'
 	]);
 

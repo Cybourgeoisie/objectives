@@ -44,7 +44,7 @@
 						notifications.error(
 							'Login Failed', 
 							'Your entered username and password credentials were not found.',
-							{ duration: -1 }
+							{ duration: 8000 }
 						);
 					}
 

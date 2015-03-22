@@ -7,7 +7,6 @@ CREATE TABLE objective (
 	"parent_id" INTEGER,
 	"created" TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT NOW(),
 	"status" BOOLEAN NOT NULL DEFAULT true,
-	CONSTRAINT objective_name_user_unique_key UNIQUE (name, user_id),
 	CONSTRAINT objective_user_fkey FOREIGN KEY (user_id)
 		REFERENCES "user" (user_id) MATCH SIMPLE
 		ON UPDATE CASCADE ON DELETE CASCADE,
