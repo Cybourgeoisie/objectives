@@ -1,6 +1,6 @@
 <?php
 
-class Objective extends Geppetto\GeppettoObject
+class Objective extends ObjectiveModel
 {
 	public function create($name, $description = '')
 	{

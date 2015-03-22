@@ -1,6 +1,6 @@
 <?php
 
-class User extends Geppetto\GeppettoObject
+class User extends ObjectiveModel
 {
 	public function login($username, $password)
 	{

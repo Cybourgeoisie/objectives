@@ -21,6 +21,7 @@ require_once(PHP_PATH . 'postgresql/PostgreSqlHandler.php');
 require_once(PHP_PATH . 'geppetto/Geppetto.php');
 
 // Models
+require_once(PHP_PATH . 'objectivemodel/ObjectiveModel.php');
 require_once(PHP_PATH . 'user/User.php');
 require_once(PHP_PATH . 'objective/Objective.php');
 require_once(PHP_PATH . 'objective/ObjectiveType.php');

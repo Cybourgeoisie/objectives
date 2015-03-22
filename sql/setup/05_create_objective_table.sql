@@ -5,7 +5,13 @@ CREATE TABLE objective (
 	"description" TEXT,
 	"user_id" INTEGER,
 	"parent_id" INTEGER,
+	"order" INTEGER NOT NULL DEFAULT 0,
+	"privacy" INTEGER NOT NULL DEFAULT 0,
+	"start" TIMESTAMP WITH TIME ZONE,
+	"end" TIMESTAMP WITH TIME ZONE,
 	"created" TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT NOW(),
+	"completed" TIMESTAMP WITH TIME ZONE,
+	"deleted" TIMESTAMP WITH TIME ZONE,
 	"status" BOOLEAN NOT NULL DEFAULT true,
 	CONSTRAINT objective_user_fkey FOREIGN KEY (user_id)
 		REFERENCES "user" (user_id) MATCH SIMPLE

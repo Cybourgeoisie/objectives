@@ -1,6 +1,6 @@
 <?php
 
-class Task extends Geppetto\GeppettoObject
+class Task extends ObjectiveModel
 {
 	public function create($objective_id, $name, $description = '')
 	{

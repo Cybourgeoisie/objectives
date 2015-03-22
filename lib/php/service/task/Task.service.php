@@ -44,4 +44,29 @@ class Task extends ServiceClass
 
 		return false;
 	}
+
+	public function complete($objective_id, $task_id)
+	{
+		// Ensure we have an active user
+		$user_obj = \SessionManager::getUser();
+		if (!$user_obj)
+		{
+			throw new Exception('Can\'t complete a task - not logged in.');
+		}
+
+		// Get objective and task, determine that the task belongs to the objective, and that the user can complete it
+		$task_obj = \Task::find($task_id);
+		if ($task_obj && $task_obj->objective_id && $task_obj->objective_id == $objective_id)
+		{
+			$objective_obj = \Objective::find($objective_id);
+
+			if ($objective_obj->user_id == $user_obj->user_id)
+			{
+				$task_obj->complete();
+				return true;
+			}
+		}
+
+		return false;
+	}
 }
