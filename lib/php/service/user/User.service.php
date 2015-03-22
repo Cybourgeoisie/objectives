@@ -18,7 +18,13 @@ class User extends ServiceClass
 	{
 		$user_obj = new \User();
 		$result = $user_obj->login($username, $password);
-		return $result;
+
+		if ($result)
+		{
+			return self::load();
+		}
+
+		return false;
 	}
 
 	public function load()

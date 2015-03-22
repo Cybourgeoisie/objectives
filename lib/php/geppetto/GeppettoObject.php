@@ -44,6 +44,25 @@ abstract class GeppettoObject extends GeppettoObjectFoundation
 		$this->hydrate($new_record);
 	}
 
+	public function delete($hard_delete = false)
+	{
+		// Make sure that the record is currently saved
+		if (!isset($this->record[$this->primary_key]))
+		{
+			return;	// Nothing to do
+		}
+
+		if ($hard_delete)
+		{
+			// Do a hard delete.. eventually
+		}
+		else if (array_key_exists('status', $this->schema) && array_key_exists('status', $this->record))
+		{
+			$this->__set('status', false);
+			$this->save();
+		}
+	}
+
 	public function saved()
 	{
 		return isset($this->record[$this->primary_key]) && $this->record[$this->primary_key];

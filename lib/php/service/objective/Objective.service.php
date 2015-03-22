@@ -32,4 +32,25 @@ class Objective extends ServiceClass
 
 		return $objective->toArray();
 	}
+
+	public function delete($objective_id)
+	{
+		// Ensure we have an active user
+		$user_obj = \SessionManager::getUser();
+		if (!$user_obj)
+		{
+			throw new Exception('Can\'t delete an objective - not logged in.');
+		}
+
+		// Get objective, determine that user can delete it
+		$objective_obj = \Objective::find($objective_id);
+
+		if ($objective_obj->user_id == $user_obj->user_id)
+		{
+			$objective_obj->delete();
+			return true;
+		}
+
+		return false;
+	}
 }
