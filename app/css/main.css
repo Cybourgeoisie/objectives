@@ -1,4 +1,6 @@
 html,body {
+	font-family: 'Muli', sans-serif;
+	font-weight: 300;
 	height:100%;
 }
 
@@ -7,10 +9,23 @@ body {
 	color: #000;
 }
 
+h1,h2,h3 {
+	font-family: 'Droid Sans', sans-serif;
+	font-weight: 400;
+}
+
+hr.small-hr {
+	margin: 12px 0;
+}
+
 #application { }
 
 #application-view {
-	margin: 0px 80px;
+	margin: 0px 5%;
+	padding: 0px 14px;
+	padding-bottom:40px;
+	border-left: 1px #eee solid;
+	border-right: 1px #eee solid;
 }
 
 #top-navbar {
@@ -18,18 +33,30 @@ body {
 	border-bottom: 1px solid #eee;
 }
 
-.page-header {
-	margin: 30px 0px 10px;
+#top-navbar a {
 	color: #333;
-	padding-bottom: 0px;
+}
+
+.page-header {
+	margin: 20px 0px 10px;
+	color: #333;
 	border-bottom: 0px;
 }
 
 .page-header-hr {
-	margin: 30px 0px 10px;
+	margin: 20px 0px 10px;
 	color: #333;
 	padding-bottom: 9px;
 	border-bottom: 1px solid #eee;
+}
+
+.page-header h1,
+.page-header h2,
+.page-header h3,
+.page-header-hr h1,
+.page-header-hr h2,
+.page-header-hr h3 {
+	margin-top: 0;
 }
 
 .vcenter {
@@ -56,8 +83,78 @@ a:hover .glyphicon {
 	margin-top: 2px;
 }
 
+/**
+ Objective
+ **/
+
+.objective-goals-header h3 {
+	margin: 0;
+	padding: 0;
+}
+
+
+.objective-goals h3 {
+	margin: 1px 0;
+	padding: 0;
+}
+
+.objective-goals h4 {
+	margin: 0;
+	padding: 0;
+}
+
+h1.objective-goal-number {
+	padding: 0 0 0 10px;
+	margin: 0;
+}
+
+h3.objective-goal-number {
+	padding: 0 0 0 14px;
+	margin: 0;
+}
+
+.objective-options h1 span {
+	padding: 8px 8px 0px 8px;
+}
+
+.objective-options h3 span {
+	margin: 0;
+	padding: 2px 4px 0px 4px;
+}
+
+.objective-options h4 span {
+	margin: 0;
+	padding: 0px 4px 0px 4px;
+}
+
+.objectives-secondary-column {
+	height: 400px;
+	padding: 0;
+	margin: 0;
+	background-image: url('../images/travel-demo.jpg');
+	background-size: cover;
+}
+
+.objectives-secondary-column .gradient-background {
+	height: 100%;
+	width: 100%;
+	/*background: linear-gradient(to bottom, rgba(255, 255, 255, 0),  rgba(255, 255, 255, 1));*/
+
+	background: -moz-linear-gradient(top, rgba(255,255,255,0) 0%, rgba(255,255,255,1) 100%);   /* FF3.6+ */
+	background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,rgba(255,255,255,0)), color-stop(100%,rgba(255,255,255,1))); /* Chrome,Safari4+ */
+	background: -webkit-linear-gradient(top, rgba(255,255,255,0) 0%,rgba(255,255,255,1) 100%); /* Chrome10+,Safari5.1+ */
+	background: -o-linear-gradient(top, rgba(255,255,255,0) 0%,rgba(255,255,255,1) 100%); /* Opera 11.10+ */
+	background: -ms-linear-gradient(top, rgba(255,255,255,0) 0%,rgba(255,255,255,1) 100%); /* IE10+ */
+	background: linear-gradient(to bottom, rgba(255,255,255,0) 0%,rgba(255,255,255,1) 100%); /* W3C */
+	filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#00ffffff', endColorstr='#00ffffff',GradientType=0 ); /* IE6-9 */
+}
+
+/**
+ Querent
+ **/
+
 #application-view .jumbotron {
-	margin: 30px -80px;
+	margin: 30px -15px;
 	position:relative;
 	padding:30px 15px;
 	color:#cdbfe3;
@@ -90,15 +187,17 @@ a:hover .glyphicon {
 	text-align: center;
 }
 
-#application-view .submit .btn
-{
+#application-view .submit .btn {
 	font-size: 24px;
 }
 
+/**
+ Footer 
+ **/
+
 #application footer {
-	padding-top:40px;
-	padding-bottom:40px;
-	margin-top:100px;
+	padding-top:20px;
+	padding-bottom:20px;
 	color:#777;
 	text-align:center;
 	border-top:1px solid #e5e5e5;
@@ -121,4 +220,20 @@ a:hover .glyphicon {
 
 #application footer .footer-links li + li::before {
     content: " | ";
+}
+
+/**
+ Media Alterations
+ **/
+@media (max-width: 767px) {
+	.objectives-secondary-column {
+		display: none;
+	}
+}
+
+/* Phones */
+@media (max-width: 560px) {
+	#application-view {
+		margin: 0;
+	}
 }
