@@ -73,7 +73,7 @@
 				<div class="row col-wrap">
 
 					<!-- First Row -->
-					<div class="col-xs-1 col-sm-1">
+					<div class="col-xs-2 col-md-1 objective-goal-number-container">
 
 						<!--<div ng-show="{{task.isComplete()}}">
 							<span class="glyphicon glyphicon-ok"></span>
@@ -85,63 +85,91 @@
 							</button>
 						</div>-->
 
-						<h1 ng-if="!key" class="objective-goal-number">{{key+1}}</h1>
+						<h1 ng-if="!key" class="objective-goal-number">{{key+19}}</h1>
 
-						<h3 ng-if="key" class="objective-goal-number">{{key+1}}</h3>
+						<h3 ng-if="key" class="objective-goal-number">{{key+19}}</h3>
 
 					</div>
 
-					<div class="col-xs-8 col-sm-8">
-						<h3 ng-if="!key">
-							{{task.get('name')}}
-						</h3>
+					<div class="col-xs-10 col-md-11">
+						<div class="row col-wrap">
+							<div class="row">
+								<div class="col-xs-9 col-sm-9">
+									<h3 ng-if="!key">
+										{{task.get('name')}}
+									</h3>
 
-						<h4 ng-if="key">
-							{{task.get('name')}}
-						</h4>
-					</div>
+									<h4 ng-if="key">
+										{{task.get('name')}}
+									</h4>
+								</div>
 
-					<div class="col-xs-3 col-sm-3 objective-options">
-						<h3 ng-if="!key">
-							<small>
-							<a>
-								<span class="glyphicon glyphicon-remove pull-right"></span>
-							</a>
-							</small>
-							<small>
-								<a>
-									<span class="glyphicon glyphicon-pencil pull-right"></span>
-								</a>
-							</small>
-							<small>
-								<a>
-									<span class="glyphicon glyphicon-plus pull-right"></span>
-								</a>
-							</small>
-						</h3>
+								<div class="col-xs-3 col-sm-3 objective-options">
+									<h3 ng-if="!key">
+										<small>
+										<a>
+											<span class="glyphicon glyphicon-remove pull-right"></span>
+										</a>
+										</small>
+										<small>
+											<a>
+												<span class="glyphicon glyphicon-pencil pull-right"></span>
+											</a>
+										</small>
+										<small>
+											<a>
+												<span class="glyphicon glyphicon-plus pull-right"></span>
+											</a>
+										</small>
+									</h3>
 
-						<h4 ng-if="key">
-							<small>
-							<a>
-								<span class="glyphicon glyphicon-remove pull-right"></span>
-							</a>
-							</small>
-							<small>
-								<a>
-									<span class="glyphicon glyphicon-pencil pull-right"></span>
-								</a>
-							</small>
-							<small>
-								<a>
-									<span class="glyphicon glyphicon-plus pull-right"></span>
-								</a>
-							</small>
-						</h4>
-					</div>
+									<h4 ng-if="key">
+										<small>
+										<a>
+											<span class="glyphicon glyphicon-remove pull-right"></span>
+										</a>
+										</small>
+										<small>
+											<a>
+												<span class="glyphicon glyphicon-pencil pull-right"></span>
+											</a>
+										</small>
+										<small>
+											<a>
+												<span class="glyphicon glyphicon-plus pull-right"></span>
+											</a>
+										</small>
+									</h4>
+								</div>
+							</div>
 
-					<!-- Second Row -->
-					<div class="col-sm-7 col-md-offset-2" ng-show="task.get('description')">
-						{{task.get('description')}}
+							<!-- Second Row -->
+							<div class="row">
+								<div class="col-sm-11"><!--<div class="col-sm-7" ng-show="task.get('description')">-->
+									<!--{{task.get('description')}}-->
+									A description will appear here. It may or may not be longer, shorter, or exactly the same length as this text provides.
+								</div>
+							</div>
+
+							<!-- Third-plus rows (Tasks) -->
+							<div class="row">
+								<div class="col-xs-1" style="text-align:center">
+									<input type="checkbox"></input>
+								</div>
+								<div class="col-xs-8">
+									<strong>This Is A Task</strong>
+								</div>
+							</div>
+
+							<div class="row">
+								<div class="col-xs-1" style="text-align:center">
+									<input type="checkbox"></input>
+								</div>
+								<div class="col-xs-8">
+									<strong>This Is Another Task</strong>
+								</div>
+							</div>
+						</div>
 					</div>
 				</div>
 			</div>
