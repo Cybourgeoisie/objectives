@@ -157,21 +157,12 @@
 							</div>
 
 							<!-- Third-plus rows (Tasks) -->
-							<div class="row">
+							<div class="row" ng-repeat="(key, subtask) in task.getSubtasks()">
 								<div class="col-xs-1" style="text-align:center">
 									<input type="checkbox"></input>
 								</div>
 								<div class="col-xs-8">
-									<strong>This Is A Task</strong>
-								</div>
-							</div>
-
-							<div class="row">
-								<div class="col-xs-1" style="text-align:center">
-									<input type="checkbox"></input>
-								</div>
-								<div class="col-xs-8">
-									<strong>This Is Another Task</strong>
+									<strong>{{subtask.name}}</strong>
 								</div>
 							</div>
 						</div>

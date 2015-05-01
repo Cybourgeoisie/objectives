@@ -1,7 +1,7 @@
 <div id="task-editor-modal" ng-init="taskEditorFormType = 'simple'">
 	<div class="ngdialog-message">
 		
-		<h4 class="modal-title">{{bEdit ? 'Edit' : 'Add'}} {{taskType}} &raquo; {{objective.get('name') || goal.name}}</h4>
+		<h4>{{bEdit ? 'Edit' : 'Add'}} {{taskType}} &raquo; {{objective.get('name') || goal.name}}</h4>
 
 		<div class="form-group">
 			<input ng-model="task.name" type="text" placeholder="" class="form-control">

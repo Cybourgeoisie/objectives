@@ -88,9 +88,14 @@ class Objective extends ObjectiveModel
 		}
 
 		// Now iterate through all subtasks and assign to tasks
-		foreach ($subtasks as $parent_id => $subtask)
+		foreach ($subtasks as $parent_id => $subtask_array)
 		{
-			$tasks[$parent_id]['subtasks'][] = $subtask;
+			if (!array_key_exists($parent_id, $tasks))
+			{
+				continue;
+			}
+
+			$tasks[$parent_id]['subtasks'] = $subtask_array;
 		}
 
 		return array_values($tasks);

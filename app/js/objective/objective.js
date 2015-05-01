@@ -26,7 +26,7 @@
 					template:   'view/task-editor/task-editor.html',
 					controller: 'TaskEditorController',
 					className:  'ngdialog-theme-default',
-					data:       {objective: this.objective}
+					data:       {objective: this.objective, callback: objectiveService.addTask}
 				});
 			};
 		}

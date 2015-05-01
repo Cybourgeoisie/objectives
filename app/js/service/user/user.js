@@ -29,6 +29,7 @@
 
 		// Event handlers
 		$rootScope.$on('new_objective', load);
+		$rootScope.$on('new_task', load);
 
 		function isLoggedIn()
 		{

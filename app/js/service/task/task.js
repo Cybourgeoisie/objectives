@@ -10,7 +10,8 @@
 					'task_id'      : null,
 					'name'         : '',
 					'description'  : '',
-					'complete'     : false
+					'complete'     : false,
+					'subtasks'     : []
 				};
 
 				if (obj)
@@ -97,7 +98,7 @@
 							);
 
 							// Add the goal to the UI
-							$rootScope.$emit('new_task', data.task.task_id);
+							//$rootScope.$emit('new_task', data.task.task_id);
 						}
 						else
 						{
@@ -174,7 +175,7 @@
 					}
 				}
 
-				function createSubtask(obj)
+				function createSubtask(obj, goal)
 				{
 					// Format the input
 					var inputData = {};
@@ -189,7 +190,8 @@
 						}
 					}
 
-					if (!inputData.objective_id || !inputData.task_id)
+					// Get the objective ID and task ID from the goal
+					if (!goal.objective_id || !goal.task_id)
 					{
 						notifications.error(
 							'Failed to Add Task', 
@@ -197,6 +199,11 @@
 							{ duration: -1 }
 						);
 						return;
+					}
+					else
+					{
+						inputData.objective_id = goal.objective_id;
+						inputData.task_id = goal.task_id;
 					}
 
 					// Submit the creation request
@@ -225,7 +232,7 @@
 							);
 
 							// Add the goal to the UI
-							$rootScope.$emit('new_task', data.task.task_id);
+							$rootScope.$emit('reload_objective', inputData.objective_id);
 						}
 						else
 						{
@@ -316,13 +323,19 @@
 					return get('complete');
 				}
 
+				function getSubtasks()
+				{
+					return get('subtasks');
+				}
+
 				return {
-					'get'        : get,
-					'set'        : set,
-					'isComplete' : isComplete,
-					'delete'     : deleteTask,
+					'get'                : get,
+					'set'                : set,
+					'isComplete'         : isComplete,
+					'delete'             : deleteTask,
 					'openAddTaskWindow'  : openAddTaskWindow,
-					'openEditTaskWindow' : openEditTaskWindow
+					'openEditTaskWindow' : openEditTaskWindow,
+					'getSubtasks'        : getSubtasks
 				};
 			};
 

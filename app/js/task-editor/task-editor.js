@@ -9,6 +9,12 @@
 			if ($scope.ngDialogData && $scope.ngDialogData.goal)
 			{
 				$scope.goal = $scope.ngDialogData.goal;
+
+				// If we're editing the goal, get the objective
+				if ($scope.ngDialogData.task)
+				{
+					$scope.objective = objectiveService.load($scope.goal.objective_id);
+				}
 			}
 			else if ($scope.ngDialogData && $scope.ngDialogData.objective)
 			{
@@ -40,19 +46,8 @@
 					return;
 				}
 
-				// If we're adding a goal, then add it to the objective
-				if ($scope.taskType == 'Goal' && !$scope.bEdit)
-				{
-					objectiveService.addTask($scope.task);
-				}
-				else if ($scope.taskType == 'Task' && $scope.bEdit)
-				{
-					$scope.callback.apply($scope, [$scope.task]);
-				}
-				else if ($scope.taskType == 'Task' && !$scope.bEdit)
-				{
-					//$scope.callback.call($scope, [$scope.task]);
-				}
+				// Follow up with the save action
+				$scope.callback.apply($scope, [$scope.task, $scope.goal || $scope.objective]);
 
 				// Clear data and close this window
 				$scope.task = {};
