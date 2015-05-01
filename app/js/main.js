@@ -23,7 +23,14 @@
 			})
 			.when('/objective/:objectiveId', {
 				templateUrl: 'view/objective/objective.html',
-				controller: 'ObjectiveController'
+				controller: 'ObjectiveController'//,
+				/*resolve = {
+					datasets : function($q, $http) {
+						return $http({
+							method: 'GET',
+						});
+					}
+				}*/
 			})
 			.when('/my-objectives', {
 				templateUrl: 'view/profile/my-objectives.html',

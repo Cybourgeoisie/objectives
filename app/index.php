@@ -1,0 +1,120 @@
+<?php
+
+require_once(dirname(realpath(__FILE__)) . '/../config/config.php');
+require_once(GATEWAY_PATH);
+
+// Requests from the same server don't have a HTTP_ORIGIN header
+if (!array_key_exists('HTTP_ORIGIN', $_SERVER))
+{
+	$_SERVER['HTTP_ORIGIN'] = $_SERVER['SERVER_NAME'];
+}
+
+try
+{
+	// Handle sessions as needed
+	SessionManager::start();
+
+	// Preload user information
+	$user_service = new \Service\User();
+	$user = $user_service->load();
+}
+catch (Exception $e)
+{
+	$user = null;
+}
+
+?><!DOCTYPE html>
+<html class="no-js" ng-app="main" ng-controller="MainController as main">
+	<head>
+		<meta charset="utf-8">
+		<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+		<title>Objectives</title>
+		<meta name="description" content="">
+		<meta name="viewport" content="width=device-width, initial-scale=1">
+		
+		<!-- First - testing locally; Second - testing mobile -->
+		<base href="http://localhost:8081/objectives/app/">
+		<!--<base href="http://192.168.0.107:8081/objectives/app/">-->
+
+		<!-- Bootstrap -->
+		<link rel="stylesheet" href="css/bootstrap.min.css">
+		<style>
+			body {
+				padding-top: 50px;
+				padding-bottom: 20px;
+			}
+		</style>
+		<link rel="stylesheet" href="css/bootstrap-theme.min.css">
+
+		<!-- Google Fonts - Droid Sans and Muli -->
+		<link href='http://fonts.googleapis.com/css?family=Droid+Sans:400,700|Muli:300,400,300italic' rel='stylesheet' type='text/css'>
+
+		<!-- App CSS -->
+		<link rel="stylesheet" href="css/main.css">
+
+		<!-- Modernizr -->
+		<script src="js/vendor/modernizr-2.6.2-respond-1.1.0.min.js"></script>
+
+		<!-- ngDialog -->
+		<link rel="stylesheet" href="css/ngDialog/ngDialog.css">
+		<link rel="stylesheet" href="css/ngDialog/ngDialog-theme-default.css">
+		<link rel="stylesheet" href="css/ngDialog/ngDialog-theme-plain.css">
+
+		<!-- Preloaded User -->
+		<script type="text/javascript">
+			window.User = <?php echo json_encode($user); ?>;
+		</script>
+	</head>
+	<body>
+		<!--[if lt IE 7]>
+				<p class="browsehappy">You are using an <strong>outdated</strong> browser. Please <a href="http://browsehappy.com/">upgrade your browser</a> to improve your experience.</p>
+		<![endif]-->
+
+		<!-- Application -->
+		<div id="application">
+			
+			<!-- Navbar -->
+			<navigation></navigation>
+
+			<!-- Current page -->
+			<div id="application-view" ng-view></div>
+
+			<!-- Bottom of the page -->
+			<app-footer></app-footer>
+
+			<!-- A modal home community -->
+			<div id="modal-generic">
+				<login-modal></login-modal>
+			</div>
+		</div>
+
+		<!-- Required Libraries -->
+		<script src="js/vendor/jquery-1.11.1.js"></script>
+		<script src="js/vendor/angular.js"></script>
+		<script src="js/vendor/angular-route.js"></script>
+		<script src="js/vendor/angular-extended-notifications.js"></script>
+		<script src="js/vendor/bootstrap.min.js"></script>
+		<script src="js/vendor/ngDialog/ngDialog.js"></script>
+
+		<!-- Services -->
+		<script src="js/service/services.js"></script>
+		<script src="js/service/user/user.js"></script>
+		<script src="js/service/objective/objective.js"></script>
+		<script src="js/service/task/task.js"></script>
+
+		<!-- App Includes -->
+		<script src="js/profile/profile.js"></script>
+		<script src="js/login/login.js"></script>
+		<script src="js/navigation/navigation.js"></script>
+		<script src="js/footer/footer.js"></script>
+		<script src="js/querent/querent.js"></script>
+		<script src="js/objective/objective.js"></script>
+		<script src="js/task-editor/task-editor.js"></script>
+
+		<!-- Entry point -->
+		<script src="js/main.js"></script>
+
+		<!-- Google Analytics -->
+		<div ng-include="'google-analytics.html'"></div>
+	</body>
+</html>

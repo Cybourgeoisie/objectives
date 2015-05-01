@@ -53,4 +53,34 @@ class Objective extends ServiceClass
 
 		return false;
 	}
+
+	public function load($objective_id)
+	{
+		$user_obj = \SessionManager::getUser();
+		if (!$user_obj)
+		{
+			return false;
+		}
+
+		// Get the objective
+		$objective_obj = \Objective::find($objective_id);
+
+		// Validate
+		if ($objective_obj->user_id != $user_obj->user_id)
+		{
+			return false;
+		}
+
+		// Format the output
+		$objective = array(
+			'objective_id' => $objective_obj->objective_id,
+			'id'           => $objective_obj->objective_id,
+			'name'         => $objective_obj->name,
+			'description'  => $objective_obj->description,
+			'created'      => $objective_obj->created,
+			'tasks'        => $objective_obj->getTasks()
+		);
+
+		return array('objective' => $objective);
+	}
 }

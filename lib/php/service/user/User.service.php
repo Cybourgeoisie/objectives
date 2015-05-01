@@ -27,6 +27,13 @@ class User extends ServiceClass
 		return false;
 	}
 
+	public function logout()
+	{
+		\SessionManager::logout();
+	
+		return true;
+	}
+
 	public function load()
 	{
 		$user_obj = \SessionManager::getUser();

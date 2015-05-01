@@ -1,6 +1,6 @@
 (function() {
 	var module = angular.module('objective', [
-		'profile'
+		'profile', 'ngDialog', 'task-editor'
 	]);
 
 	/** 
@@ -8,21 +8,29 @@
 	 **/
 
 	module.controller('ObjectiveController', [
-	'$rootScope', '$routeParams', '$location', 'objectiveService', 
-	function($rootScope, $routeParams, $location, objectiveService)
-	{
-		try
+		'$rootScope', '$routeParams', '$location', 'objectiveService', 'ngDialog',
+		function($rootScope, $routeParams, $location, objectiveService, ngDialog)
 		{
-			this.objective = objectiveService.load($routeParams.objectiveId);
-		}
-		catch (exception)
-		{
-			$location.path('/404');
-		}
+			try
+			{
+				this.objective = objectiveService.load($routeParams.objectiveId);
+			}
+			catch (exception)
+			{
+				$location.path('/404');
+			}
 
-		// Open the edit window
-		this.openEditWindow = TaskEditController.prototype.openEditWindow;
-	}]);
+			this.openGoalWindow = function()
+			{
+				ngDialog.open({
+					template:   'view/task-editor/task-editor.html',
+					controller: 'TaskEditorController',
+					className:  'ngdialog-theme-default',
+					data:       {objective: this.objective}
+				});
+			};
+		}
+	]);
 
 	module.directive('objective', function()
 	{
@@ -33,74 +41,38 @@
 	});
 
 	module.factory('objectiveService', [
-	'userFactory', 'objectiveFactory',
-	function(userFactory, objectiveFactory)
-	{
-		// Declarations
-		var objective = objectiveFactory.create();
-
-		function loadObjective(id)
+		'userFactory', 'objectiveFactory', '$rootScope',
+		function(userFactory, objectiveFactory, $rootScope)
 		{
-			if (userFactory.hasObjective(id))
+			// Declarations
+			var objective = objectiveFactory.create();
+
+			// Init Events
+			$rootScope.$on('reload_objective', reloadObjective);
+
+			function reloadObjective(scope, objective_id)
 			{
-				objective = userFactory.getObjective(id);
-				return objective;
+				var obj = loadObjective(objective_id);
+				obj.reload();
 			}
 
-			throw {'error': 'No objective found for ID ' + id};
+			function loadObjective(id)
+			{
+				if (userFactory.hasObjective(id))
+				{
+					objective = userFactory.getObjective(id);
+					return objective;
+				}
+
+				throw {'error': 'No objective found for ID ' + id};
+			}
+
+			return {
+				'create'  : function(obj) { return objective.create(obj); },
+				'load'    : loadObjective,
+				'addTask' : function(task) { return objective.addTask(task); },
+				'reload'  : reloadObjective
+			};
 		}
-
-		return {
-			'create'  : function(obj) { return objective.create(obj); },
-			'load'    : loadObjective,
-			'addTask' : function(task) { return objective.addTask(task); }
-		};
-	}]);
-
-	/**
-	 * Tasks
-	 **/
-
-	var TaskEditController = function($filter, objectiveService)
-	{
-		this.task = {};
-
-		this.submitTask = function()
-		{
-			// Make sure we have a task provided
-			if (!this.task || !this.task.name)
-			{
-				return;
-			}
-
-			if (this.task.name)
-			{
-				this.task.name = $filter('capitalize')(this.task.name);
-			}
-
-			// Add the task and clear it out
-			objectiveService.addTask(this.task);
-			this.task = {};
-
-			// Hide the window
-			$('#edit-task-modal').modal('hide');
-		}
-	}
-
-	TaskEditController.prototype.openEditWindow = function()
-	{
-		$('#edit-task-modal').modal('show');
-	}
-
-	module.controller('TaskEditController', ['$filter', 'objectiveService', TaskEditController]);
-
-	module.directive('editTaskModal', function()
-	{
-		return {
-			restrict:     "E",
-			templateUrl:  "view/objective/edit-task-modal.html",
-			controller:   "TaskEditController",
-			controllerAs: "taskCtrl"
-		};
-	});
+	]);
 })();
