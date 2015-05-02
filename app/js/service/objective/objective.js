@@ -27,7 +27,7 @@
 						return 0;
 					}
 
-					var progress = parseInt(countTasks({'complete': true}) / numTasks);
+					var progress = parseInt(countTasks({'complete': true}) / numTasks * 100);
 
 					return progress;
 				}
@@ -54,9 +54,51 @@
 					}
 				}
 
-				function getTasks()
+				function getTasks(opt)
 				{
-					return tasks || [];
+					// Default - no filters
+					if (!opt || !tasks)
+					{
+						return tasks || [];
+					}
+
+					var bComplete = false;
+					if (opt && opt instanceof Object)
+					{
+						if (opt.hasOwnProperty('complete') && opt.complete)
+						{
+							bComplete = true;
+						}
+						else if (opt.hasOwnProperty('inProgress') && opt.inProgress)
+						{
+							bInProgress = true;
+						}
+					}
+
+					var filteredTasks = [];
+					if (bComplete)
+					{
+						for (var i = 0; i < tasks.length; i++)
+						{
+							if (tasks[i].get('completed'))
+							{
+								filteredTasks.push(tasks[i]);
+							}
+						}
+					}
+					else if (bInProgress)
+					{
+						for (var i = 0; i < tasks.length; i++)
+						{
+							if (!tasks[i].get('completed'))
+							{
+								filteredTasks.push(tasks[i]);
+							}
+						}
+					}
+
+					// Default case - nada
+					return filteredTasks;
 				}
 
 				function hasTasks()
@@ -73,6 +115,13 @@
 					}
 
 					var taskObj = taskFactory.create(task);
+
+					// Set the order if not already set
+					if (!taskObj.get('order'))
+					{
+						taskObj.set('order', tasks.length + 1);
+					}
+
 					tasks.push(taskObj);
 				}
 
@@ -115,7 +164,7 @@
 					{
 						for (var i = 0; i < tasks.length; i++)
 						{
-							if (tasks[i].hasOwnProperty('complete') && tasks[i].complete)
+							if (tasks[i].get('completed'))
 							{
 								numComplete++;
 							}

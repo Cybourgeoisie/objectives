@@ -10,7 +10,8 @@
 					'task_id'      : null,
 					'name'         : '',
 					'description'  : '',
-					'complete'     : false,
+					'completed'    : null,
+					'order'        : 0,
 					'subtasks'     : []
 				};
 
@@ -44,6 +45,16 @@
 						controller: 'TaskEditorController',
 						className:  'ngdialog-theme-default',
 						data:       {goal: data, task: data, callback: editTask}
+					});
+				}
+
+				function openDeleteConfirmationWindow()
+				{
+					ngDialog.open({
+						template:   'view/delete-confirmation/delete-confirmation.html',
+						controller: 'TaskEditorController',
+						className:  'ngdialog-theme-default',
+						data:       {goal: data, task: data, callback: deleteTask}
 					});
 				}
 
@@ -91,14 +102,16 @@
 						// Validate outcome
 						if (data.success && data.task)
 						{
+							/*
 							notifications.success(
 								'Goal Created', 
 								'Your goal has been created!',
 								{ duration: 4000 }
 							);
+							*/
 
 							// Add the goal to the UI
-							//$rootScope.$emit('new_task', data.task.task_id);
+							$rootScope.$emit('reload_objective', inputData.objective_id);
 						}
 						else
 						{
@@ -155,14 +168,16 @@
 						// Validate outcome
 						if (data.success)
 						{
+							/*
 							notifications.success(
 								'Goal Edited', 
 								'Your goal has been edited.',
 								{ duration: 4000 }
 							);
+							*/
 
 							// Add the goal to the UI
-							//$rootScope.$emit('new_task', data.task.task_id);
+							$rootScope.$emit('reload_objective', inputData.objective_id);
 						}
 						else
 						{
@@ -225,11 +240,13 @@
 						// Validate outcome
 						if (data.success && data.task)
 						{
+							/*
 							notifications.success(
 								'Task Created', 
 								'Your task has been added!',
 								{ duration: 4000 }
 							);
+							*/
 
 							// Add the goal to the UI
 							$rootScope.$emit('reload_objective', inputData.objective_id);
@@ -239,6 +256,152 @@
 							notifications.error(
 								'Failed to Create Task', 
 								'Your task could not be created.',
+								{ duration: -1 }
+							);
+						}
+					}
+				}
+
+				function completeTask(obj)
+				{
+					// Format the input
+					var inputData = {};
+					if (obj == this)
+					{
+						inputData = {
+							'objective_id' : obj.get('objective_id'),
+							'task_id' : obj.get('task_id')
+						};
+					}
+					else if (obj instanceof Object)
+					{
+						for (var prop in obj)
+						{
+							if (obj.hasOwnProperty(prop))
+							{
+								inputData[prop] = obj[prop];
+							}
+						}
+					}
+
+					if (!inputData.objective_id || !inputData.task_id)
+					{
+						notifications.error(
+							'Failed to Complete Goal', 
+							'Your goal was not attached to an objective or task',
+							{ duration: -1 }
+						);
+						return;
+					}
+
+					// Submit the creation request
+					$http.post('./api/task/complete', inputData).
+						success(completeTaskSuccess).
+						error(function(data, status, headers, config)
+						{
+							notifications.error(
+								'Failed to Complete Goal', 
+								'Your goal could not be completed.',
+								{ duration: -1 }
+							);
+						});
+
+					return inputData;
+
+					function completeTaskSuccess(data, status, headers, config)
+					{
+						// Validate outcome
+						if (data.success)
+						{
+							/*
+							notifications.success(
+								'Goal Completed', 
+								'Your goal has been completed!',
+								{ duration: 4000 }
+							);
+							*/
+
+							// Polish the trophies
+							$rootScope.$emit('reload_objective', inputData.objective_id);
+						}
+						else
+						{
+							notifications.error(
+								'Failed to Complete Goal', 
+								'Your goal could not be completed.',
+								{ duration: -1 }
+							);
+						}
+					}
+				}
+
+				function revertCompleteTask(obj)
+				{
+					// Format the input
+					var inputData = {};
+					if (obj == this)
+					{
+						inputData = {
+							'objective_id' : obj.get('objective_id'),
+							'task_id' : obj.get('task_id')
+						};
+					}
+					else if (obj instanceof Object)
+					{
+						for (var prop in obj)
+						{
+							if (obj.hasOwnProperty(prop))
+							{
+								inputData[prop] = obj[prop];
+							}
+						}
+					}
+
+					if (!inputData.objective_id || !inputData.task_id)
+					{
+						notifications.error(
+							'Failed to Uncomplete Goal', 
+							'Your goal was not attached to an objective or task',
+							{ duration: -1 }
+						);
+						return;
+					}
+
+					// Submit the creation request
+					$http.post('./api/task/uncomplete', inputData).
+						success(revertCompleteTaskSuccess).
+						error(function(data, status, headers, config)
+						{
+							notifications.error(
+								'Failed to Uncomplete Goal',
+								'Your goal could not be uncompleted.',
+								{ duration: -1 }
+							);
+						});
+
+					return inputData;
+
+					function revertCompleteTaskSuccess(data, status, headers, config)
+					{
+						// Validate outcome
+						if (data.success)
+						{
+							/*
+							notifications.success(
+								'Goal Uncompleted', 
+								'Your goal has been uncompleted.',
+								{ duration: 4000 }
+							);
+							*/
+
+							// Polish the trophies
+							$rootScope.$emit('reload_objective', inputData.objective_id);
+						}
+						else
+						{
+							notifications.error(
+								'Failed to Uncomplete Goal', 
+								'Your goal could not be uncompleted.',
 								{ duration: -1 }
 							);
 						}
@@ -282,11 +445,13 @@
 						// Validate outcome
 						if (resultData.success)
 						{
+							/*
 							notifications.success(
 								'Goal Removed', 
 								'Your goal has been deleted.',
 								{ duration: 4000 }
 							);
+							*/
 
 							// Refresh the UI
 							$rootScope.$emit('reload_objective', data.objective_id);
@@ -320,7 +485,7 @@
 
 				function isComplete()
 				{
-					return get('complete');
+					return get('completed');
 				}
 
 				function getSubtasks()
@@ -335,7 +500,10 @@
 					'delete'             : deleteTask,
 					'openAddTaskWindow'  : openAddTaskWindow,
 					'openEditTaskWindow' : openEditTaskWindow,
-					'getSubtasks'        : getSubtasks
+					'openDeleteConfirmationWindow' : openDeleteConfirmationWindow,
+					'getSubtasks'        : getSubtasks,
+					'complete'           : completeTask,
+					'revertComplete'     : revertCompleteTask
 				};
 			};
 

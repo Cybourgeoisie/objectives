@@ -57,7 +57,8 @@ class Objective extends ObjectiveModel
 				objective_id,
 				name,
 				description,
-				parent_id
+				parent_id,
+				completed
 			FROM
 				task
 			WHERE
@@ -74,6 +75,7 @@ class Objective extends ObjectiveModel
 		// Collect all subtasks and top-level tasks
 		$tasks = array();
 		$subtasks = array();
+		$order = 1;
 		foreach ($res as $row)
 		{
 			if ($row['parent_id'])
@@ -83,6 +85,7 @@ class Objective extends ObjectiveModel
 			else
 			{
 				$tasks[$row['task_id']] = $row;
+				$tasks[$row['task_id']]['order'] = $order++;
 				$tasks[$row['task_id']]['subtasks'] = array();
 			}
 		}

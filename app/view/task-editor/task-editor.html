@@ -1,4 +1,4 @@
-<div id="task-editor-modal" ng-init="taskEditorFormType = 'simple'">
+<div id="task-editor-modal" ng-init="taskEditorFormType = (bEdit && task && task.description) ? 'detailed' : 'simple'">
 	<div class="ngdialog-message">
 		
 		<h4>{{bEdit ? 'Edit' : 'Add'}} {{taskType}} &raquo; {{objective.get('name') || goal.name}}</h4>
@@ -29,13 +29,15 @@
 	<div class="ngdialog-buttons">
 
 		<div class="pull-left btn-group" data-toggle="buttons">
-			<label class="btn btn-primary active">
+			<label class="btn btn-primary" ng-class="{active: (!bEdit || !task || !task.description)}">
 				<input type="radio" ng-model="taskEditorFormType"
-					name="options" value="simple" input-detect-change checked> Simple
+					name="options" value="simple" input-detect-change 
+					ng-checked="taskEditorFormType == 'simple'"> Simple
 			</label>
-			<label class="btn btn-primary">
+			<label class="btn btn-primary" ng-class="{active: (bEdit && task && task.description)}">
 				<input type="radio" ng-model="taskEditorFormType"
-					name="options" value="detailed" input-detect-change> Detailed
+					name="options" value="detailed" input-detect-change
+					ng-checked="taskEditorFormType == 'detailed'"> Detailed
 			</label>
 		</div>
 

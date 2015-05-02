@@ -9,6 +9,7 @@
 			if ($scope.ngDialogData && $scope.ngDialogData.goal)
 			{
 				$scope.goal = $scope.ngDialogData.goal;
+				$scope.taskName = $scope.goal.name;
 
 				// If we're editing the goal, get the objective
 				if ($scope.ngDialogData.task)
@@ -19,6 +20,7 @@
 			else if ($scope.ngDialogData && $scope.ngDialogData.objective)
 			{
 				$scope.objective = $scope.ngDialogData.objective;
+				$scope.taskName = $scope.objective.get('name');
 			}
 
 			// Get any edit information attached to the scope
@@ -47,6 +49,22 @@
 				}
 
 				// Follow up with the save action
+				$scope.callback.apply($scope, [$scope.task, $scope.goal || $scope.objective]);
+
+				// Clear data and close this window
+				$scope.task = {};
+				$scope.closeThisDialog('Cancel');
+			}
+
+			$scope.deleteTask = function()
+			{
+				// Make sure we have a task provided
+				if (!$scope.task)
+				{
+					return;
+				}
+
+				// Follow up with the delete action
 				$scope.callback.apply($scope, [$scope.task, $scope.goal || $scope.objective]);
 
 				// Clear data and close this window

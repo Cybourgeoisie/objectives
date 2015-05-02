@@ -30,8 +30,10 @@
 					</div>
 
 					<div class="progress objective-progress">
-						<div class="progress-bar progress-bar-success" role="progressbar" aria-valuenow="{{objective.getProgress()}}" 
-							aria-valuemin="0" aria-valuemax="100" style="width: {{objective.getProgress()}}%;">
+						<div class="progress-bar progress-bar-success" role="progressbar" 
+							aria-valuenow="{{objective.getProgress()}}" 
+							aria-valuemin="0" aria-valuemax="100" 
+							style="width: {{objective.getProgress() > 4 ? objective.getProgress() : 5}}%;">
 							<span class="progress-text">{{objective.getProgress()}}%</span>
 						</div>
 					</div>

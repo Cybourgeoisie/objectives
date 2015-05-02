@@ -44,4 +44,19 @@ abstract class ObjectiveModel extends Geppetto\GeppettoObject
 			$this->save();
 		}
 	}
+
+	public function uncomplete()
+	{
+		// Make sure that the record is currently saved
+		if (!isset($this->record[$this->primary_key]))
+		{
+			return;	// Nothing to do
+		}
+
+		if (array_key_exists('completed', $this->schema) && array_key_exists('completed', $this->record))
+		{
+			$this->__set('completed', null);
+			$this->save();
+		}
+	}
 }
